@@ -1,16 +1,16 @@
 # 🪟 openbox-setup
 
 A simple, minimal, and highly functional Openbox window manager setup created by [JustAGuy Linux](https://www.youtube.com/@JustAGuyLinux).  
-Perfect for lightweight desktop environments, especially when paired with tools like `rofi`, `tint2`, `xfce4-appfinder`, and custom scripts.
+Perfect for lightweight desktop environments, especially when paired with tools like `rofi`, `polybar`, `xfce4-appfinder`, and custom scripts.
 
 ![Openbox Screenshot](https://raw.githubusercontent.com/drewgrif/openbox-setup/main/screenshots/desktop.png)
 
 ## 📦 What’s Included
 
 - 🧠 Thoughtful `rc.xml` with full workspace and window management keybindings
-- 🎨 Custom theme: `Simply_Circles_Dark` + `cinnamonroll` font
+- 🎨 Custom theme: `Simply_Circles_Dark`
 - 🔤 Rofi keybind helper (`keybinds.rasi`) + launchable with `Super + H`
-- 🧰 Useful scripts: `redshift-on`, `redshift-off`, `changevolume`, `keyhelper.sh`
+- 🧰 Useful scripts: `redshift-on`, `redshift-off`, `changevolume`, `help`
 - 🎧 Multimedia and brightness key support
 - 🖼️ Autostart-ready layout and wallpaper support
 - 🧹 Clean margins, centered smart window placement, and snap functionality
@@ -36,7 +36,7 @@ chmod +x install.sh
 | `Super + B`      | Launch browser (`firefox-esr`)|
 | `Super + Space`  | Launch appfinder (`xfce4-appfinder`) |
 | `Super + H`      | Launch keybind helper         |
-| `Print`          | Screenshot full screen (`maim`) |
+| `Print`          | Screenshot full screen (`flameshot`) |
 | `Super + Print`  | Screenshot selection          |
 | `Alt + Print`    | Launch Flameshot              |
 | `Super + Arrow`  | Aero snap window positions    |
@@ -91,7 +91,8 @@ openbox-setup/
 - `openbox`
 - `rofi`
 - `tilix`
-- `maim` or `flameshot`
+- `wezterm`
+- `flameshot`
 - `xfce4-appfinder`
 - `feh`
 - `xbacklight`
