@@ -92,11 +92,19 @@ The script will:
 | `Super + Print`     | Screenshot via `flameshot`       |
 | `XF86Audio*`        | Multimedia keys support          |
 
+## 🧠 Notes
+
+- Menu is generated dynamically via `obmenu-generator -p -i`
+- Wallpapers live in `~/.config/openbox/wallpaper/`
+- Scripts are in `~/.config/openbox/scripts/`
+- Keybind reference opens via `Super + H`
+
 ## 🎨 Themes
 
-- **Openbox theme:** Simply_Circles_Dark (from `config/themes`)
-- **GTK Theme:** Orchis (dark, teal, grey tweaks)
-- **Icon Theme:** Colloid Everforest/Dracula
+- **Openbox theme:** `Simply_Circles_Dark` (included in this repo)
+- **GTK Theme:** [Orchis](https://github.com/vinceliuice/Orchis-theme) — dark with teal & grey tweaks
+- **Icon Theme:** [Colloid](https://github.com/vinceliuice/Colloid-icon-theme) — Everforest/Dracula variants  
+  > 💡 _Special thanks to [vinceliuice](https://github.com/vinceliuice) for creating these excellent GTK and icon themes._
 
 ## 🛠️ Repo Directory Structure
 
@@ -121,12 +129,6 @@ openbox-setup/
         └── Simply_Circles_Dark/  # Openbox window border theme
 ```
 
-## 🧠 Notes
-
-- Menu is generated dynamically via `obmenu-generator -p -i`
-- Wallpapers live in `~/.config/openbox/wallpaper/`
-- Scripts are in `~/.config/openbox/scripts/`
-- Keybind reference opens via `Super + H`
 
 ## 📺 Watch on YouTube
 
