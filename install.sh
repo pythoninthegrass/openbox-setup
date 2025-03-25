@@ -65,16 +65,7 @@ check_openbox() {
 setup_openbox_config() {
     echo "Moving Openbox configuration files..."
     mkdir -p "$CONFIG_DIR"
-    cp -r "$CLONED_DIR/rc.xml" "$CONFIG_DIR/"
-
-    for dir in dunst picom polybar rofi scripts wallpaper; do
-        cp -r "$CLONED_DIR/$dir" "$CONFIG_DIR/" || echo "Warning: Failed to copy $dir."
-    done
-
-    cp "$CLONED_DIR/autostart" "$CONFIG_DIR/"
-    cp "$CLONED_DIR/menu.xml" "$CONFIG_DIR/"
-    cp "$CLONED_DIR/environment" "$CONFIG_DIR/"
-
+    cp -a "$CLONED_DIR/config/." "$CONFIG_DIR/" || echo "Warning: Failed to copy Openbox config contents."
     echo "Openbox configuration files copied successfully."
 }
 
@@ -83,7 +74,7 @@ setup_openbox_config() {
 # ========================================
 install_packages() {
     echo "Installing required packages..."
-    sudo apt-get install -y openbox tint2 polybar xorg xorg-dev xbacklight xbindkeys xvkbd xinput build-essential network-manager-gnome pamixer thunar thunar-archive-plugin thunar-volman lxappearance dialog mtools avahi-daemon acpi acpid gvfs-backends xfce4-power-manager pavucontrol pulsemixer feh fonts-recommended fonts-font-awesome fonts-terminus exa suckless-tools ranger redshift flameshot qimgv rofi dunst libnotify-bin xdotool unzip libnotify-dev firefox-esr geany geany-plugin-addons geany-plugin-git-changebar geany-plugin-spellcheck geany-plugin-treebrowser geany-plugin-markdown geany-plugin-insertnum geany-plugin-lineoperations geany-plugin-automark pipewire-audio nala micro xdg-user-dirs-gtk lightdm || echo "Warning: Package installation failed."
+    sudo apt-get install -y openbox tint2 xorg xorg-dev xbacklight xbindkeys xvkbd xinput build-essential network-manager-gnome pamixer thunar thunar-archive-plugin thunar-volman lxappearance dialog mtools avahi-daemon acpi acpid gvfs-backends xfce4-power-manager pavucontrol pulsemixer feh fonts-recommended fonts-font-awesome fonts-terminus exa suckless-tools ranger redshift flameshot qimgv rofi dunst libnotify-bin xdotool unzip libnotify-dev firefox-esr geany geany-plugin-addons geany-plugin-git-changebar geany-plugin-spellcheck geany-plugin-treebrowser geany-plugin-markdown geany-plugin-insertnum geany-plugin-lineoperations geany-plugin-automark pipewire-audio nala micro xdg-user-dirs-gtk lightdm || echo "Warning: Package installation failed."
     echo "Package installation completed."
 }
 
@@ -148,7 +139,7 @@ install_wezterm() {
     TMP_DEB="/tmp/wezterm.deb"
     wget -O "$TMP_DEB" "$WEZTERM_URL" && sudo apt install -y "$TMP_DEB" && rm -f "$TMP_DEB"
     mkdir -p "$HOME/.config/wezterm"
-    wget -O "$HOME/.config/wezterm/wezterm.lua" "" || echo "Download wezterm config manually."
+    wget -O "$HOME/.config/wezterm/wezterm.lua" "https://raw.githubusercontent.com/drewgrif/jag_dots/main/.config/wezterm/wezterm.lua" || die "Failed to download wezterm config."
 }
 
 install_fonts() {
@@ -160,9 +151,6 @@ install_fonts() {
             wget -q "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/$font.zip" -P /tmp && unzip -q /tmp/$font.zip -d ~/.local/share/fonts/$font/ && rm /tmp/$font.zip
         fi
     done
-    if [ -d ~/.config/suckless/fonts ]; then
-        cp ~/.config/suckless/fonts/*.ttf ~/.local/share/fonts/ 2>/dev/null
-    fi
     fc-cache -f
     echo "Fonts installed."
 }
