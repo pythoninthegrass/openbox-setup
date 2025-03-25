@@ -1,0 +1,75 @@
+#!/bin/bash
+
+RC_XML="$HOME/.config/openbox/rc.xml"
+LIST_FILE="$HOME/.cache/openbox/keybinds.list"
+THEME_FILE="$HOME/.config/openbox/rofi/keybinds.rasi"
+
+# Make sure the output directory exists
+mkdir -p "$(dirname "$LIST_FILE")"
+
+# Regenerate the keybinds list from rc.xml
+python3 - <<EOF
+import os
+
+rc_path = os.path.expanduser("~/.config/openbox/rc.xml")
+list_path = os.path.expanduser("~/.cache/openbox/keybinds.list")
+
+output = []
+current_section = "UNCATEGORIZED"
+key = ""
+command = ""
+action = ""
+inside_keybind = False
+
+with open(rc_path, "r", encoding="utf-8") as f:
+    lines = f.readlines()
+
+for line in lines:
+    line = line.strip()
+
+    if line.startswith("<!--") and "-->" in line:
+        comment = line.replace("<!--", "").replace("-->", "").strip()
+        current_section = comment.upper()
+        continue
+
+    if line.startswith("<keybind key="):
+        key = line.split('"')[1]
+        command = ""
+        action = ""
+        inside_keybind = True
+        continue
+
+    if inside_keybind and "<command>" in line:
+        command = line.replace("<command>", "").replace("</command>", "").strip()
+        continue
+
+    if inside_keybind and "<action name=" in line:
+        action = line.split('"')[1]
+        continue
+
+    if inside_keybind and ("<to>" in line or "<direction>" in line):
+        arg = line.replace("<to>", "").replace("</to>", "").replace("<direction>", "").replace("</direction>", "").strip()
+        action = f"{action} {arg}"
+        continue
+
+    if line == "</keybind>":
+        label = command if command else action
+        if key and label:
+            output.append(f"{key:25} | {label:45} | {current_section:25}")
+        inside_keybind = False
+
+with open(list_path, "w", encoding="utf-8") as f:
+    for entry in output:
+        f.write(entry.strip() + "\n")
+EOF
+
+# Show in Rofi using the theme
+selected=$(column -t -s '|' "$LIST_FILE" | rofi -dmenu -i -p "Openbox Keybindings" -theme "$THEME_FILE")
+
+# Optionally run selected command
+if [[ -n "$selected" ]]; then
+    cmd=$(echo "$selected" | awk -F'|' '{print $2}' | xargs)
+    if command -v "$cmd" &>/dev/null; then
+        nohup $cmd &>/dev/null &
+    fi
+fi
