@@ -14,7 +14,7 @@ A complete Openbox configuration setup by [JustAGuy Linux](https://www.youtube.c
 - 📊 Panel: Polybar
 - 🌗 Redshift toggle + volume scripts
 - 🎛️ GTK & icon themes (Orchis & Colloid)
-- 📄 Keybind viewer: `keybinds.rasi` for Rofi
+- 📄 Keybind viewer: `Super + h` for Rofi
 - 🧰 `obmenu-generator` with dynamic menu support
 
 ## 🛠️ Directory Structure
