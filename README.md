@@ -100,10 +100,3 @@ The script will:
 
 Want to see how it looks and works?  
 🎥 Check out [JustAGuy Linux on YouTube](https://www.youtube.com/@JustAGuyLinux)
-
----
-
-🧈 Part of the [Butter Bean Linux](https://butterbeanlinux.com) ecosystem.
-```
-
----
