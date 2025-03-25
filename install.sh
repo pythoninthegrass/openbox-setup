@@ -117,18 +117,18 @@ install_ftlabs_picom() {
 install_fastfetch() {
     if command_exists fastfetch; then
         echo "Fastfetch is already installed. Skipping."
-        return
+    else
+        echo "Installing Fastfetch..."
+        git clone https://github.com/fastfetch-cli/fastfetch "$INSTALL_DIR/fastfetch" || return
+        cd "$INSTALL_DIR/fastfetch"
+        cmake -S . -B build && cmake --build build && sudo mv build/fastfetch /usr/local/bin/
     fi
-    git clone https://github.com/fastfetch-cli/fastfetch "$INSTALL_DIR/fastfetch" || return
-    cd "$INSTALL_DIR/fastfetch"
-    cmake -S . -B build && cmake --build build && sudo mv build/fastfetch /usr/local/bin/
+
+    echo "Setting up Fastfetch config..."
     mkdir -p "$HOME/.config/fastfetch"
-    git clone --depth=1 --filter=blob:none --sparse "https://github.com/drewgrif/jag_dots.git" "$HOME/tmp_jag_dots"
-    cd "$HOME/tmp_jag_dots"
-    git sparse-checkout set .config/fastfetch
-    mv .config/fastfetch "$HOME/.config/"
-    cd && rm -rf "$HOME/tmp_jag_dots"
+    wget -O "$HOME/.config/fastfetch/config.jsonc" "https://raw.githubusercontent.com/drewgrif/jag_dots/main/.config/fastfetch/config.jsonc" || echo "Warning: Failed to download config.jsonc"
 }
+
 
 install_wezterm() {
     if command_exists wezterm; then
