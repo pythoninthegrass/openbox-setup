@@ -70,30 +70,6 @@ The script will:
 - Apply user directories and screenshot folder
 - Enable relevant services (`avahi-daemon`, `acpid`)
 
-## 🧷 Key Features
-
-| Shortcut            | Action                           |
-|---------------------|----------------------------------|
-| `Super + Enter`     | Launch terminal (WezTerm)        |
-| `Super + Space`     | App launcher (Rofi)              |
-| `Super + H`         | Show keybinds in terminal        |
-| `Super + Arrow Keys`| Snap window to side/center       |
-| `Super + 1-0`       | Switch to desktop                |
-| `Super + Shift + 1-0`| Move window to desktop          |
-| `Print`             | Screenshot via `maim`            |
-| `Super + Print`       | Screenshot via `flameshot`       |
-| `XF86Audio*`        | Multimedia keys support          |
-
-## 🎨 Themes
-
-- **Openbox theme:** Simply_Circles_Dark (from `config/themes`)
-- **GTK Theme:** Orchis (dark, teal, grey tweaks)
-- **Icon Theme:** Colloid Everforest/Dracula
-
-Here's a clean layout diagram you can drop directly into your `README.md` under a section like **"📁 Config Structure"** or **"📂 ~/.config/openbox layout"**:
-
----
-
 ## 📂 `~/.config/openbox` Layout
 
 ```
@@ -122,6 +98,30 @@ Here's a clean layout diagram you can drop directly into your `README.md` under 
 └── obmenu-generator/     # Dynamic Openbox menu system
     └── schema.pl
 ```
+
+## 🧷 Key Features
+
+| Shortcut            | Action                           |
+|---------------------|----------------------------------|
+| `Super + Enter`     | Launch terminal (WezTerm)        |
+| `Super + Space`     | App launcher (Rofi)              |
+| `Super + H`         | Show keybinds in terminal        |
+| `Super + Arrow Keys`| Snap window to side/center       |
+| `Super + 1-0`       | Switch to desktop                |
+| `Super + Shift + 1-0`| Move window to desktop          |
+| `Print`             | Screenshot via `maim`            |
+| `Super + Print`       | Screenshot via `flameshot`       |
+| `XF86Audio*`        | Multimedia keys support          |
+
+## 🎨 Themes
+
+- **Openbox theme:** Simply_Circles_Dark (from `config/themes`)
+- **GTK Theme:** Orchis (dark, teal, grey tweaks)
+- **Icon Theme:** Colloid Everforest/Dracula
+
+Here's a clean layout diagram you can drop directly into your `README.md` under a section like **"📁 Config Structure"** or **"📂 ~/.config/openbox layout"**:
+
+---
 
 ## 🧠 Notes
 
