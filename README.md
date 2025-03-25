@@ -6,7 +6,7 @@ This repo provides a clean, themed, and user-friendly Openbox experience using c
 ## 📦 What's Included
 
 - 🔧 `install.sh` — automated setup for Openbox, configs, packages, theming, and utilities
-- 🎨 GTK + icon themes (Orchis + Colloid with Everforest tweaks)
+- 🎨 GTK + icon themes (Orchis + Colloid with tweaks)
 - 🖼️ Wallpapers, compositor (Picom), panel (Polybar), notifications (Dunst), and Rofi
 - 📄 Keybinds cheat sheet (`keybinds.rasi`) for Rofi
 - 🧪 Optional `.bashrc` replacement
@@ -55,7 +55,8 @@ This setup installs packages including but not limited to:
 ## 🎛️ Notes
 
 - Terminal is set to **WezTerm**
-- Screenshots use **maim** and **flameshot**
+- Terminal in quake mode **Tilix**
+- Screenshots use **flameshot**
 - `keybinds.rasi` is used with Rofi to show your shortcuts (`Super + H`)
 - Wallpapers live in `~/.config/openbox/wallpaper`
 - Scripts live in `~/.config/openbox/scripts`
