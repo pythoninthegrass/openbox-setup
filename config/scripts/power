@@ -17,7 +17,7 @@ chosen=$(echo -e "[Cancel]\nLogout\nShutdown\nReboot" | \
     rofi -dmenu -i -p "Power Menu" -line-padding 4 -hide-scrollbar -theme "$ROFI_THEME")
 
 case "$chosen" in
-    "Logout") bspc quit ;;
+    "Logout") Exit ;;
     "Shutdown") systemctl poweroff ;;
     "Reboot") systemctl reboot ;;
     *) exit 0 ;; # Exit on cancel or invalid input

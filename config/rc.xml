@@ -694,6 +694,11 @@
         <command>~/.config/openbox/scripts/changevolume mute</command>
       </action>
     </keybind>
+    <keybind key="W-x">
+      <action name="Execute">
+        <command>~/.config/openbox/scripts/power</command>
+      </action>
+    </keybind>
     <keybind key="XF86AudioNext">
       <action name="Execute">
         <command>mpc next</command>

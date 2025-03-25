@@ -17,27 +17,35 @@ A complete Openbox configuration setup by [JustAGuy Linux](https://www.youtube.c
 - 📄 Keybind viewer: `Super + h` for Rofi
 - 🧰 `obmenu-generator` with dynamic menu support
 
-## 🛠️ Directory Structure
+## 📂 `~/.config/openbox` Layout
+
+This is what your Openbox environment will look like after installation:
 
 ```
-openbox-setup/
-├── install.sh              # One script to install and configure everything
-├── README.md               # This file
-└── config/
-    ├── rc.xml              # Main Openbox config
-    ├── autostart           # Startup applications
-    ├── environment         # Session environment variables
-    ├── menu.xml            # Static right-click menu
-    ├── keybinds.rasi       # Rofi cheatsheet theme
-    ├── dunst/              # Notification settings
-    ├── picom/              # FT-Labs Picom config
-    ├── polybar/            # Panel configuration
-    ├── rofi/               # Rofi themes/configs
-    ├── scripts/            # Custom volume/redshift/keybind tools
-    ├── wallpaper/          # Default and custom wallpapers
-    ├── obmenu/             # obmenu-generator schema
-    └── themes/
-        └── Simply_Circles_Dark/  # Openbox window border theme
+~/.config/openbox/
+├── rc.xml                 # Main Openbox configuration
+├── autostart              # Startup applications
+├── environment            # Session environment variables
+├── menu.xml               # Right-click menu (static fallback)
+├── keybinds.rasi          # Rofi template to display keybinds
+├── wallpaper/             # Default and user wallpapers
+├── dunst/                 # Notification system configuration
+│   └── dunstrc
+├── picom/                 # Picom compositor configuration
+│   └── picom.conf
+├── polybar/               # Panel bar setup
+│   ├── config.ini
+│   └── launch.sh
+├── rofi/                  # Rofi theme and launcher config
+│   ├── config.rasi
+│   └── keybinds.rasi
+├── scripts/               # Custom helper scripts
+│   ├── redshift-on
+│   ├── redshift-off
+│   ├── changevolume
+│   └── keyhelper.sh
+└── obmenu-generator/      # Dynamic Openbox menu system
+    └── schema.pl
 ```
 
 ## 🚀 Installation
@@ -63,41 +71,12 @@ The script will:
 - Back up any existing `~/.config/openbox` directory
 - Install required packages (`openbox`, `rofi`, `picom`, `thunar`, etc.)
 - Set up themes and GTK appearance
-- Install [fastfetch](https://github.com/fastfetch-cli/fastfetch) and my preferred config
-- Install [wezterm](https://github.com/wez/wezterm) and my preferred config
-- Optionally replace `.bashrc` with the one from [jag_dots](https://github.com/drewgrif/jag_dots)
+- Install [fastfetch](https://github.com/fastfetch-cli/fastfetch) and your preferred config
+- Install [wezterm](https://github.com/wez/wezterm)
+- Optionally replace `.bashrc` with one from [jag_dots](https://github.com/drewgrif/jag_dots)
 - Install and configure `obmenu-generator` with a custom schema
 - Apply user directories and screenshot folder
 - Enable relevant services (`avahi-daemon`, `acpid`)
-
-## 📂 `~/.config/openbox` Layout
-
-```
-~/.config/openbox/
-├── rc.xml                 # Main Openbox configuration
-├── autostart             # Startup applications
-├── environment           # Session environment variables
-├── menu.xml              # Right-click menu (static fallback)
-├── keybinds.rasi         # Rofi template to display keybinds
-├── wallpaper/            # Default and user wallpapers
-├── dunst/                # Notification system configuration
-│   └── dunstrc
-├── picom/                # Picom compositor configuration
-│   └── picom.conf
-├── polybar/              # Panel bar setup
-│   ├── config.ini
-│   └── launch.sh
-├── rofi/                 # Rofi theme and launcher config
-│   ├── config.rasi
-│   └── keybinds.rasi
-├── scripts/              # Custom helper scripts
-│   ├── redshift-on
-│   ├── redshift-off
-│   ├── changevolume
-│   └── keyhelper.sh
-└── obmenu-generator/     # Dynamic Openbox menu system
-    └── schema.pl
-```
 
 ## 🧷 Key Features
 
@@ -110,7 +89,7 @@ The script will:
 | `Super + 1-0`       | Switch to desktop                |
 | `Super + Shift + 1-0`| Move window to desktop          |
 | `Print`             | Screenshot via `maim`            |
-| `Super + Print`       | Screenshot via `flameshot`       |
+| `Super + Print`     | Screenshot via `flameshot`       |
 | `XF86Audio*`        | Multimedia keys support          |
 
 ## 🎨 Themes
@@ -119,15 +98,35 @@ The script will:
 - **GTK Theme:** Orchis (dark, teal, grey tweaks)
 - **Icon Theme:** Colloid Everforest/Dracula
 
-Here's a clean layout diagram you can drop directly into your `README.md` under a section like **"📁 Config Structure"** or **"📂 ~/.config/openbox layout"**:
+## 🛠️ Repo Directory Structure
 
----
+```
+openbox-setup/
+├── install.sh              # One script to install and configure everything
+├── README.md               # This file
+└── config/
+    ├── rc.xml              # Main Openbox config
+    ├── autostart           # Startup applications
+    ├── environment         # Session environment variables
+    ├── menu.xml            # Static right-click menu
+    ├── keybinds.rasi       # Rofi cheatsheet theme
+    ├── dunst/              # Notification settings
+    ├── picom/              # FT-Labs Picom config
+    ├── polybar/            # Panel configuration
+    ├── rofi/               # Rofi themes/configs
+    ├── scripts/            # Custom volume/redshift/keybind tools
+    ├── wallpaper/          # Default and custom wallpapers
+    ├── obmenu/             # obmenu-generator schema
+    └── themes/
+        └── Simply_Circles_Dark/  # Openbox window border theme
+```
 
 ## 🧠 Notes
 
-- Menu is generated via `obmenu-generator -p -i`
-- Wallpapers are located in `~/.config/openbox/wallpaper/`
-- Scripts in `~/.config/openbox/scripts/` handle redshift, volume, keybinds
+- Menu is generated dynamically via `obmenu-generator -p -i`
+- Wallpapers live in `~/.config/openbox/wallpaper/`
+- Scripts are in `~/.config/openbox/scripts/`
+- Keybind reference opens via `Super + H`
 
 ## 📺 Watch on YouTube
 
