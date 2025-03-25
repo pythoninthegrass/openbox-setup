@@ -46,12 +46,6 @@ chmod +x install.sh
 
 ## 📁 File Layout
 
-Perfect, thanks! Here's the corrected layout with your structure:
-
----
-
-### 📁 Final Directory Layout (accurate to your system)
-
 ```
 openbox-setup/
 ├── config/
