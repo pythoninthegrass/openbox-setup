@@ -63,10 +63,10 @@ The script will:
 - Back up any existing `~/.config/openbox` directory
 - Install required packages (`openbox`, `rofi`, `picom`, `thunar`, etc.)
 - Set up themes and GTK appearance
-- Install [fastfetch](https://github.com/fastfetch-cli/fastfetch) and download your preferred config
-- Install [wezterm](https://github.com/wez/wezterm)
+- Install [fastfetch](https://github.com/fastfetch-cli/fastfetch) and my preferred config
+- Install [wezterm](https://github.com/wez/wezterm) and my preferred config
 - Optionally replace `.bashrc` with the one from [jag_dots](https://github.com/drewgrif/jag_dots)
-- Install and configure `obmenu-generator` with your custom schema
+- Install and configure `obmenu-generator` with a custom schema
 - Apply user directories and screenshot folder
 - Enable relevant services (`avahi-daemon`, `acpid`)
 
@@ -107,5 +107,3 @@ Want to see how it looks and works?
 ```
 
 ---
-
-Would you like this saved into your repo as `README.md`? I can also push it directly into the script if you're ready.
