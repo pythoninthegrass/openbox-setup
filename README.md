@@ -1,68 +1,111 @@
 # 🪟 openbox-setup
 
-Minimal Openbox setup for Debian-based systems, crafted by [JustAGuy Linux](https://www.youtube.com/@JustAGuyLinux).  
-This repo provides a clean, themed, and user-friendly Openbox experience using custom scripts, Rofi integration, and other handpicked tools.
+A complete Openbox configuration setup by [JustAGuy Linux](https://www.youtube.com/@JustAGuyLinux), featuring a polished, minimal desktop experience with theming, tools, and smart automation via a single `install.sh` script.
 
 ## 📦 What's Included
 
-- 🔧 `install.sh` — automated setup for Openbox, configs, packages, theming, and utilities
-- 🎨 GTK + icon themes (Orchis + Colloid with tweaks)
-- 🖼️ Wallpapers, compositor (Picom), panel (Polybar), notifications (Dunst), and Rofi
-- 📄 Keybinds cheat sheet (`keybinds.rasi`) for Rofi
-- 🧪 Optional `.bashrc` replacement
-- 🧰 Scripts for volume, redshift, screenshot, etc.
+- 🖼️ Openbox configuration with custom theme: `Simply_Circles_Dark`
+- 🧠 Smart workspace keybinds, window snapping, and mouse actions
+- 📁 File manager: Thunar with archive plugin
+- 🖥️ Terminal: [WezTerm](https://wezfurlong.org/wezterm/)
+- 🔍 App launcher: Rofi
+- 🔔 Notifications: Dunst
+- 💡 Compositor: Picom (FT-Labs build)
+- 📊 Panel: Polybar
+- 🌗 Redshift toggle + volume scripts
+- 🎛️ GTK & icon themes (Orchis & Colloid)
+- 📄 Keybind viewer: `keybinds.rasi` for Rofi
+- 🧰 `obmenu-generator` with dynamic menu support
 
-## 🗂️ Repo Structure
+## 🛠️ Directory Structure
 
 ```
 openbox-setup/
-├── install.sh       # Main setup script
-├── README.md        # This file
-└── config/          # Openbox config and assets
-    ├── rc.xml
-    ├── autostart
-    ├── environment
-    ├── menu.xml
-    ├── dunst/
-    ├── picom/
-    ├── polybar/
-    ├── rofi/
-    ├── scripts/
-    └── wallpaper/
+├── install.sh              # One script to install and configure everything
+├── README.md               # This file
+└── config/
+    ├── rc.xml              # Main Openbox config
+    ├── autostart           # Startup applications
+    ├── environment         # Session environment variables
+    ├── menu.xml            # Static right-click menu
+    ├── keybinds.rasi       # Rofi cheatsheet theme
+    ├── dunst/              # Notification settings
+    ├── picom/              # FT-Labs Picom config
+    ├── polybar/            # Panel configuration
+    ├── rofi/               # Rofi themes/configs
+    ├── scripts/            # Custom volume/redshift/keybind tools
+    ├── wallpaper/          # Default and custom wallpapers
+    ├── obmenu/             # obmenu-generator schema
+    └── themes/
+        └── Simply_Circles_Dark/  # Openbox window border theme
 ```
 
 ## 🚀 Installation
 
+1. Clone the repository:
 ```bash
 git clone https://github.com/drewgrif/openbox-setup.git
 cd openbox-setup
 chmod +x install.sh
+```
+
+2. Run the installer:
+```bash
 ./install.sh
 ```
 
-You will be prompted before making any system changes. The script backs up your existing Openbox config if found.
+3. Follow the prompts — your Openbox environment will be ready in minutes!
 
-## ✅ Dependencies (installed automatically)
+## 💾 What It Installs
 
-This setup installs packages including but not limited to:
+The script will:
 
-- `openbox`, `rofi`, `polybar`, `dunst`, `picom`, `thunar`
-- `xfce4-appfinder`, `pavucontrol`, `pulsemixer`, `ranger`
-- `redshift`, `flameshot`, `geany`, `fastfetch`, `wezterm`
-- GTK and icon themes: Orchis, Colloid
-- Nerd Fonts: FiraCode, Hack, JetBrainsMono, and more
+- Back up any existing `~/.config/openbox` directory
+- Install required packages (`openbox`, `rofi`, `picom`, `thunar`, etc.)
+- Set up themes and GTK appearance
+- Install [fastfetch](https://github.com/fastfetch-cli/fastfetch) and download your preferred config
+- Install [wezterm](https://github.com/wez/wezterm)
+- Optionally replace `.bashrc` with the one from [jag_dots](https://github.com/drewgrif/jag_dots)
+- Install and configure `obmenu-generator` with your custom schema
+- Apply user directories and screenshot folder
+- Enable relevant services (`avahi-daemon`, `acpid`)
 
-## 🎛️ Notes
+## 🧷 Key Features
 
-- Terminal is set to **WezTerm**
-- Terminal in quake mode **Tilix**
-- Screenshots use **flameshot**
-- `keybinds.rasi` is used with Rofi to show your shortcuts (`Super + H`)
-- Wallpapers live in `~/.config/openbox/wallpaper`
-- Scripts live in `~/.config/openbox/scripts`
+| Shortcut            | Action                           |
+|---------------------|----------------------------------|
+| `Super + Enter`     | Launch terminal (WezTerm)        |
+| `Super + Space`     | App launcher (Rofi)              |
+| `Super + H`         | Show keybinds in terminal        |
+| `Super + Arrow Keys`| Snap window to side/center       |
+| `Super + 1-0`       | Switch to desktop                |
+| `Super + Shift + 1-0`| Move window to desktop          |
+| `Print`             | Screenshot via `maim`            |
+| `Alt + Print`       | Screenshot via `flameshot`       |
+| `XF86Audio*`        | Multimedia keys support          |
 
-## 📺 Watch It
+## 🎨 Themes
 
-> Want to see it in action? Check out [JustAGuy Linux on YouTube](https://www.youtube.com/@JustAGuyLinux)
+- **Openbox theme:** Simply_Circles_Dark (from `config/themes`)
+- **GTK Theme:** Orchis (dark, teal, grey tweaks)
+- **Icon Theme:** Colloid Everforest/Dracula
+
+## 🧠 Notes
+
+- Menu is generated via `obmenu-generator -p -i`
+- Wallpapers are located in `~/.config/openbox/wallpaper/`
+- Scripts in `~/.config/openbox/scripts/` handle redshift, volume, keybinds
+
+## 📺 Watch on YouTube
+
+Want to see how it looks and works?  
+🎥 Check out [JustAGuy Linux on YouTube](https://www.youtube.com/@JustAGuyLinux)
 
 ---
+
+🧈 Part of the [Butter Bean Linux](https://butterbeanlinux.com) ecosystem.
+```
+
+---
+
+Would you like this saved into your repo as `README.md`? I can also push it directly into the script if you're ready.
