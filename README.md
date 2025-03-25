@@ -81,7 +81,7 @@ The script will:
 | `Super + 1-0`       | Switch to desktop                |
 | `Super + Shift + 1-0`| Move window to desktop          |
 | `Print`             | Screenshot via `maim`            |
-| `Alt + Print`       | Screenshot via `flameshot`       |
+| `Super + Print`       | Screenshot via `flameshot`       |
 | `XF86Audio*`        | Multimedia keys support          |
 
 ## 🎨 Themes
@@ -89,6 +89,39 @@ The script will:
 - **Openbox theme:** Simply_Circles_Dark (from `config/themes`)
 - **GTK Theme:** Orchis (dark, teal, grey tweaks)
 - **Icon Theme:** Colloid Everforest/Dracula
+
+Here's a clean layout diagram you can drop directly into your `README.md` under a section like **"📁 Config Structure"** or **"📂 ~/.config/openbox layout"**:
+
+---
+
+## 📂 `~/.config/openbox` Layout
+
+```
+~/.config/openbox/
+├── rc.xml                 # Main Openbox configuration
+├── autostart             # Startup applications
+├── environment           # Session environment variables
+├── menu.xml              # Right-click menu (static fallback)
+├── keybinds.rasi         # Rofi template to display keybinds
+├── wallpaper/            # Default and user wallpapers
+├── dunst/                # Notification system configuration
+│   └── dunstrc
+├── picom/                # Picom compositor configuration
+│   └── picom.conf
+├── polybar/              # Panel bar setup
+│   ├── config.ini
+│   └── launch.sh
+├── rofi/                 # Rofi theme and launcher config
+│   ├── config.rasi
+│   └── keybinds.rasi
+├── scripts/              # Custom helper scripts
+│   ├── redshift-on
+│   ├── redshift-off
+│   ├── changevolume
+│   └── keyhelper.sh
+└── obmenu-generator/     # Dynamic Openbox menu system
+    └── schema.pl
+```
 
 ## 🧠 Notes
 
