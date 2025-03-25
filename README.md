@@ -1,8 +1,3 @@
-Here’s a clean and informative `README.md` draft for your `openbox-setup` GitHub repo, modeled in the spirit of your `dwm-setup`:
-
----
-
-```markdown
 # 🪟 openbox-setup
 
 A simple, minimal, and highly functional Openbox window manager setup created by [JustAGuy Linux](https://www.youtube.com/@JustAGuyLinux).  
