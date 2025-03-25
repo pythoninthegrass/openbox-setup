@@ -74,7 +74,7 @@ setup_openbox_config() {
 # ========================================
 install_packages() {
     echo "Installing required packages..."
-    sudo apt-get install -y openbox tint2 xorg xorg-dev xbacklight xbindkeys xvkbd xinput build-essential network-manager-gnome pamixer thunar thunar-archive-plugin thunar-volman lxappearance dialog mtools avahi-daemon acpi acpid gvfs-backends xfce4-power-manager pavucontrol pulsemixer feh fonts-recommended fonts-font-awesome fonts-terminus exa suckless-tools ranger redshift flameshot qimgv rofi dunst libnotify-bin xdotool unzip libnotify-dev firefox-esr geany geany-plugin-addons geany-plugin-git-changebar geany-plugin-spellcheck geany-plugin-treebrowser geany-plugin-markdown geany-plugin-insertnum geany-plugin-lineoperations geany-plugin-automark pipewire-audio nala micro xdg-user-dirs-gtk lightdm || echo "Warning: Package installation failed."
+    sudo apt-get install -y openbox tint2 xorg xorg-dev xbacklight xbindkeys xvkbd xinput build-essential network-manager-gnome pamixer thunar thunar-archive-plugin thunar-volman lxappearance dialog mtools avahi-daemon acpi acpid gvfs-backends xfce4-power-manager pavucontrol pulsemixer tilix feh fonts-recommended fonts-font-awesome fonts-terminus exa suckless-tools ranger redshift flameshot qimgv rofi dunst libnotify-bin xdotool unzip libnotify-dev firefox-esr geany geany-plugin-addons geany-plugin-git-changebar geany-plugin-spellcheck geany-plugin-treebrowser geany-plugin-markdown geany-plugin-insertnum geany-plugin-lineoperations geany-plugin-automark pipewire-audio nala micro xdg-user-dirs-gtk lightdm || echo "Warning: Package installation failed."
     echo "Package installation completed."
 }
 
@@ -190,6 +190,38 @@ EOF
     echo "GTK theming applied."
 }
 
+install_obmenu_generator() {
+    echo "Installing obmenu-generator dependencies..."
+    sudo apt install -y libgtk3-perl libmodule-build-perl
+
+    echo "Installing Linux-DesktopFiles..."
+    git clone https://github.com/trizen/Linux-DesktopFiles.git "$INSTALL_DIR/Linux-DesktopFiles"
+    cd "$INSTALL_DIR/Linux-DesktopFiles"
+    perl Build.PL
+    ./Build
+    ./Build test
+    sudo ./Build install
+
+    echo "Setting up obmenu-generator..."
+    mkdir -p ~/.local/bin/
+    mkdir -p ~/.config/obmenu-generator
+
+    git clone https://github.com/trizen/obmenu-generator.git "$INSTALL_DIR/obmenu-generator"
+    cp "$INSTALL_DIR/obmenu-generator/obmenu-generator" ~/.local/bin/
+
+    # Use schema.pl from your repo
+    cp "$CLONED_DIR/config/obmenu/schema.pl" ~/.config/obmenu-generator/
+
+    echo "Generating Openbox menu..."
+    obmenu-generator -p -i
+}
+
+install_openbox_theme() {
+    echo "Installing custom Openbox theme..."
+    mkdir -p ~/.themes
+    cp -r "$CLONED_DIR/config/themes/Simply_Circles_Dark" ~/.themes/
+}
+
 replace_bashrc() {
     echo "Replace your .bashrc with justaguylinux version? (y/n)"
     read response
@@ -214,6 +246,8 @@ install_fastfetch
 install_wezterm
 install_fonts
 install_theming
+install_obmenu_generator
+install_openbox_theme
 change_theming
 replace_bashrc
 echo "All installations completed successfully!"

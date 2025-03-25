@@ -634,6 +634,11 @@
         <command>wezterm</command>
       </action>
     </keybind>
+    <keybind key="W-S-Return">
+      <action name="Execute">
+        <command>tilix --quake</command>
+      </action>
+    </keybind>
     <keybind key="W-b">
       <action name="Execute">
         <command>firefox-esr</command>
