@@ -8,7 +8,7 @@ A complete Openbox configuration setup by [JustAGuy Linux](https://www.youtube.c
 - 🧠 Smart workspace keybinds, window snapping, and mouse actions
 - 📁 File manager: Thunar with archive plugin
 - 🖥️ Terminal: [WezTerm](https://wezfurlong.org/wezterm/)
-- 🔍 App launcher: Rofi
+- 🔍 App launcher: XFCE4-appfinder
 - 🔔 Notifications: Dunst
 - 💡 Compositor: Picom (FT-Labs build)
 - 📊 Panel: Polybar
