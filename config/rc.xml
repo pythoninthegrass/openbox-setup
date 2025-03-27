@@ -618,16 +618,6 @@
       </action>
     </keybind>
     <!-- Application Launchers -->
-    <keybind key="Print">
-      <action name="Execute">
-        <command>flameshot full --path ~/Screenshots/</command>
-      </action>
-    </keybind>
-    <keybind key="W-Print">
-      <action name="Execute">
-        <command>flameshot gui --path ~/Screenshots/</command>
-      </action>
-    </keybind>
     <keybind key="W-d">
       <action name="Execute">
         <command>Discord</command>
