@@ -1,14 +1,10 @@
 
-# Originally using tint2 panel
-
-# tint2 -c ~/.config/openbox/tint2/tint2rc &
-# tint2 -c ~/.config/openbox/tint2/workspace.tint2rc &
-# tint2 -c ~/.config/openbox/tint2/systray.tint2rc &
+# Originally using tint2 but now using polybar
 
 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 dunst -config ~/.config/openbox/dunst/dunstrc &
 picom --config ~/.config/openbox/picom/picom.conf --animations -b &
-feh --bg-fill ~/.config/openbox/wallpaper/wallhaven-y89ok7_3440x1440.png &
+feh --bg-fill ~/.config/openbox/wallpaper/bluemountain.jpg &
 
 ## Polybar or tint
 ~/.config/openbox/polybar/polybar-ob &
