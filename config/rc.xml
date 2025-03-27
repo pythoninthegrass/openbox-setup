@@ -176,11 +176,20 @@
     <moveButton>Middle</moveButton>
     <!-- 'Left', 'Middle', 'Right' -->
   </dock>
-  <applications>
-    <application class="obs">
-      <desktop>10</desktop>
-    </application>
-  </applications>
+<applications>
+<application class="*" name="*">
+  <position force="yes">
+    <x>center</x>
+    <y>center</y>
+  </position>
+</application>
+<application class="Thunar">
+  <desktop>2</desktop>           <!-- Open on workspace 2 -->
+  <focus>yes</focus>             <!-- Focus it -->
+  <follow>yes</follow>           <!-- Switch to workspace 2 -->
+  <maximized>yes</maximized>    <!-- Maximize it -->
+</application>
+</applications>
   <keyboard>
     <chainQuitKey>C-g</chainQuitKey>
     <!-- Desktop Switching -->
