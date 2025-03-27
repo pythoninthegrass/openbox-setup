@@ -222,6 +222,29 @@ install_openbox_theme() {
     cp -r "$CLONED_DIR/config/themes/Simply_Circles_Dark" ~/.themes/
 }
 
+install_lxappearance_launcher() {
+    echo "[*] Creating lxappearance desktop launcher..."
+
+    local desktop_file="$HOME/.local/share/applications/lxappearance.desktop"
+
+    mkdir -p "$(dirname "$desktop_file")"
+
+    cat > "$desktop_file" <<EOF
+[Desktop Entry]
+Name=Appearance
+Comment=Customize the look of your desktop
+Exec=lxappearance
+Icon=preferences-desktop-theme
+Terminal=false
+Type=Application
+Categories=Settings;GTK;X-XFCE;
+EOF
+
+    chmod +x "$desktop_file"
+
+    echo "[✓] lxappearance launcher created at $desktop_file"
+}
+
 replace_bashrc() {
     echo "Replace your .bashrc with justaguylinux version? (y/n)"
     read response
@@ -248,6 +271,7 @@ install_fonts
 install_theming
 install_obmenu_generator
 install_openbox_theme
+install_lxappearance_launcher
 change_theming
 replace_bashrc
 echo "All installations completed successfully!"
