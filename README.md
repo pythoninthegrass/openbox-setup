@@ -2,6 +2,8 @@
 
 A complete Openbox configuration setup by [JustAGuy Linux](https://www.youtube.com/@JustAGuyLinux), featuring a polished, minimal desktop experience with theming, tools, and smart automation via a single `install.sh` script.
 
+![2025-03-27_14-36_3](https://github.com/user-attachments/assets/7c5a4f82-3ec8-48e2-aab6-924d5f41b261)
+
 ## 📦 What's Included
 
 - 🖼️ Openbox configuration with custom theme: `Simply_Circles_Dark`
