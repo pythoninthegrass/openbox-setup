@@ -85,7 +85,7 @@ The script will:
 | Shortcut            | Action                           |
 |---------------------|----------------------------------|
 | `Super + Enter`     | Launch terminal (WezTerm)        |
-| `Super + Space`     | App launcher (Rofi)              |
+| `Super + Space`     | App launcher (xfce4-appfinder)              |
 | `Super + H`         | Show keybinds in terminal        |
 | `Super + Arrow Keys`| Snap window to side/center       |
 | `Super + 1-0`       | Switch to desktop                |
