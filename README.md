@@ -37,10 +37,15 @@ This assumes a fresh Debian or Debian-based install with `sudo` access.
 | `geany` + `plugins`    | Lightweight IDE                   |
 | `dunst`                | Notifications                     |
 | `rofi`                 | Launcher + keybind helper         |
-| `redshift`             | Night light toggle scripts        |
-| `flameshot`, `maim`    | Screenshot utilities              |
-| `obmenu-generator`     | Dynamic right-click menu          |
+| `nala`                 | Better apt frontend               |
 | `fastfetch`            | System info utility               |
+| `pipewire`             | Audio handling                    |
+| `flameshot`,           | Screenshot tools                  |
+| `micro`                | Terminal text editor              |
+| `redshift`             | Night light                       |
+| `qimgv`                | Lightweight image viewer          |
+| `fzf`, etc.            | Utilities & enhancements          |
+| `obmenu-generator`     | Dynamic right-click menu          |
 | GTK & icon themes      | Cohesive look and feel            |
 
 > 📄 _Need help with Geany? See the full guide at [justaguylinux.com/documentation/software/geany](https://justaguylinux.com/documentation/software/geany)_
