@@ -104,6 +104,9 @@ Keybindings are defined in:
 │   └── keyhelper.sh
 └── obmenu-generator/      # Dynamic menu config
     └── schema.pl
+    
+~/.config/wezterm/
+└── wezterm.lua              # Terminal configuration
 ```
 
 ---
