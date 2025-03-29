@@ -27,14 +27,14 @@ This assumes a fresh Debian or Debian-based install with `sudo` access.
 | Component             | Purpose                           |
 |------------------------|-----------------------------------|
 | `openbox`              | Lightweight window manager        |
-| `picom` (FT-Labs)      | Compositor for transparency       |
+| `picom` `(FT-Labs)`    | Compositor for transparency       |
 | `polybar`              | Status bar                        |
 | `wezterm`              | Terminal emulator (default)       |
 | `tilix`                | Optional quake-style terminal     |
-| `thunar` + plugins     | File manager                      |
+| `thunar` + `plugins`   | File manager                      |
 | `xfce4-appfinder`      | Application launcher              |
 | `firefox-esr`          | Default web browser               |
-| `geany` + plugins      | Lightweight IDE                   |
+| `geany` + `plugins`    | Lightweight IDE                   |
 | `dunst`                | Notifications                     |
 | `rofi`                 | Launcher + keybind helper         |
 | `redshift`             | Night light toggle scripts        |
@@ -43,7 +43,7 @@ This assumes a fresh Debian or Debian-based install with `sudo` access.
 | `fastfetch`            | System info utility               |
 | GTK & icon themes      | Cohesive look and feel            |
 
-Also installs helper scripts and configures your user directories.
+> 📄 _Need help with Geany? See the full guide at [justaguylinux.com/documentation/software/geany](https://justaguylinux.com/documentation/software/geany)_
 
 ---
 
