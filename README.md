@@ -100,8 +100,7 @@ Keybindings are defined in:
 ├── scripts/               # Helper tools
 │   ├── redshift-on
 │   ├── redshift-off
-│   ├── changevolume
-│   └── keyhelper.sh
+│   └── help
 └── obmenu-generator/      # Dynamic menu config
     └── schema.pl
     
