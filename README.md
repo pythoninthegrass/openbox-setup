@@ -129,3 +129,4 @@ Keybindings are defined in:
 
 Want to see it in action?  
 🎥 Check out [JustAGuy Linux on YouTube](https://www.youtube.com/@JustAGuyLinux)
+![Debian User](https://img.shields.io/badge/Debian-User-D70A53?style=for-the-badge&logo=debian&logoColor=white)
