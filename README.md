@@ -1,4 +1,5 @@
 # 🪟 openbox-setup
+![Made for Debian](https://img.shields.io/badge/Made%20for-Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white)
 
 A complete Openbox configuration script for Debian-based systems.  
 Includes a polished theme, smart automation, dynamic menus, and sane keybindings — fully set up in minutes.
