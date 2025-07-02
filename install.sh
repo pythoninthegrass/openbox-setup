@@ -306,7 +306,7 @@ fi
 if [ "$ONLY_CONFIG" = false ]; then
     msg "Creating lxappearance desktop launcher..."
     
-    local desktop_file="$HOME/.local/share/applications/lxappearance.desktop"
+    desktop_file="$HOME/.local/share/applications/lxappearance.desktop"
     mkdir -p "$(dirname "$desktop_file")"
     
     cat > "$desktop_file" <<EOF
