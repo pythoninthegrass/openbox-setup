@@ -1,391 +1,314 @@
 #!/bin/bash
 
-# ============================================
-# JustAGuy Linux - Openbox Automated Setup Script
+# JustAGuy Linux - Openbox Setup
 # https://github.com/drewgrif/openbox-setup
-# ============================================
 
-LOG_FILE="$HOME/justaguylinux-openbox-install.log"
-exec > >(tee -a "$LOG_FILE") 2>&1
+set -e
 
-CLONED_DIR="$HOME/openbox-setup"
+# Command line options
+ONLY_CONFIG=false
+EXPORT_PACKAGES=false
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --only-config)
+            ONLY_CONFIG=true
+            shift
+            ;;
+        --export-packages)
+            EXPORT_PACKAGES=true
+            shift
+            ;;
+        --help)
+            echo "Usage: $0 [OPTIONS]"
+            echo "  --only-config      Only copy config files (skip packages and external tools)"
+            echo "  --export-packages  Export package lists for different distros and exit"
+            echo "  --help            Show this help message"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+# Paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$HOME/.config/openbox"
-INSTALL_DIR="$HOME/installation"
-BUTTERSCRIPTS_REPO="https://github.com/drewgrif/butterscripts"
+TEMP_DIR="/tmp/openbox_$$"
+LOG_FILE="$HOME/openbox-install.log"
 
-# Create a unique base temporary directory for this run
-MAIN_TEMP_DIR="/tmp/justaguylinux_$(date +%s)_$$"
-mkdir -p "$MAIN_TEMP_DIR"
+# Logging and cleanup
+exec > >(tee -a "$LOG_FILE") 2>&1
+trap "rm -rf $TEMP_DIR" EXIT
 
-command_exists() {
-    command -v "$1" &>/dev/null
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+die() { echo -e "${RED}ERROR: $*${NC}" >&2; exit 1; }
+msg() { echo -e "${CYAN}$*${NC}"; }
+
+# Export package lists for different distros
+export_packages() {
+    echo "=== Openbox Setup - Package Lists for Different Distributions ==="
+    echo
+    
+    # Combine all packages
+    local all_packages=(
+        "${PACKAGES_CORE[@]}"
+        "${PACKAGES_UI[@]}"
+        "${PACKAGES_FILE_MANAGER[@]}"
+        "${PACKAGES_AUDIO[@]}"
+        "${PACKAGES_UTILITIES[@]}"
+        "${PACKAGES_TERMINAL[@]}"
+        "${PACKAGES_FONTS[@]}"
+        "${PACKAGES_BUILD[@]}"
+    )
+    
+    echo "DEBIAN/UBUNTU:"
+    echo "sudo apt install ${all_packages[*]}"
+    echo
+    
+    # Arch equivalents
+    local arch_packages=(
+        "xorg-server xorg-xinit xorg-xbacklight xbindkeys xvkbd xorg-xinput"
+        "base-devel openbox tint2 xdotool"
+        "libnotify"
+        "polybar rofi dunst feh lxappearance network-manager-applet"
+        "thunar thunar-archive-plugin thunar-volman"
+        "gvfs dialog mtools smbclient cifs-utils ripgrep fd unzip"
+        "pavucontrol pulsemixer pamixer pipewire-pulse"
+        "avahi acpi acpid xfce4-power-manager xfce4-appfinder flameshot"
+        "qimgv firefox micro xdg-user-dirs-gtk tilix"
+        "eza"
+        "ttf-font-awesome terminus-font"
+        "cmake meson ninja curl pkgconf"
+    )
+    
+    echo "ARCH LINUX:"
+    echo "sudo pacman -S ${arch_packages[*]}"
+    echo
+    
+    # Fedora equivalents
+    local fedora_packages=(
+        "xorg-x11-server-Xorg xorg-x11-xinit xbacklight xbindkeys xvkbd xinput"
+        "gcc make git openbox tint2 xdotool"
+        "libnotify"
+        "polybar rofi dunst feh lxappearance NetworkManager-gnome"
+        "thunar thunar-archive-plugin thunar-volman"
+        "gvfs dialog mtools samba-client cifs-utils ripgrep fd-find unzip"
+        "pavucontrol pulsemixer pamixer pipewire-pulseaudio"
+        "avahi acpi acpid xfce4-power-manager xfce4-appfinder flameshot"
+        "qimgv firefox micro xdg-user-dirs-gtk tilix"
+        "eza"
+        "fontawesome-fonts terminus-font"
+        "cmake meson ninja-build curl pkgconfig"
+    )
+    
+    echo "FEDORA:"
+    echo "sudo dnf install ${fedora_packages[*]}"
+    echo
+    
+    echo "NOTE: Some packages may have different names or may not be available"
+    echo "in all distributions. You may need to:"
+    echo "  - Find equivalent packages in your distro's repositories"
+    echo "  - Install some tools from source"
+    echo "  - Use alternative package managers (AUR for Arch, Flatpak, etc.)"
+    echo
+    echo "After installing packages, you can use:"
+    echo "  $0 --only-config    # To copy just the Openbox configuration files"
 }
 
-# ============================================
-# Error Handling
-# ============================================
-die() {
-    echo "ERROR: $*" >&2
-    exit 1
-}
+# Check if we should export packages and exit
+if [ "$EXPORT_PACKAGES" = true ]; then
+    export_packages
+    exit 0
+fi
 
-# ============================================
-# Temporary Directory Management
-# ============================================
-create_temp_dir() {
-    local name="$1"
-    local temp_dir="$MAIN_TEMP_DIR/$name"
-    mkdir -p "$temp_dir"
-    echo "$temp_dir"
-}
-
-# Clean up all temporary directories on exit (success or failure)
-cleanup() {
-    echo "Cleaning up temporary files..."
-    rm -rf "$MAIN_TEMP_DIR"
-    rm -rf "$INSTALL_DIR"
-    echo "Cleanup completed."
-}
-trap cleanup EXIT
-
-# ============================================
-# Script Fetching Functions
-# ============================================
-get_butterscript() {
-    local script_path="$1"
-    local script_name=$(basename "$script_path")
-    local temp_script="$MAIN_TEMP_DIR/scripts/$script_name"
-    
-    # Create directory for downloaded scripts
-    mkdir -p "$MAIN_TEMP_DIR/scripts"
-    
-    echo "Fetching script: $script_path from butterscripts repository..."
-    
-    # Quietly download the script
-    wget -q -O "$temp_script" "https://raw.githubusercontent.com/drewgrif/butterscripts/main/$script_path"
-    local wget_status=$?
-    
-    # Check if the download was successful
-    if [ $wget_status -ne 0 ] || [ ! -f "$temp_script" ] || [ ! -s "$temp_script" ]; then
-        echo "ERROR: Failed to download script: $script_path (wget status: $wget_status)"
-        return 1
-    fi
-    
-    # Fix line endings
-    sed -i 's/\r$//' "$temp_script" 2>/dev/null
-    
-    # Make executable
-    chmod +x "$temp_script"
-    
-    # Success - return 0 instead of the path
-    return 0
-}
-
-run_butterscript() {
-    local script_path="$1"
-    local script_name=$(basename "$script_path" .sh)
-    local script_file="$MAIN_TEMP_DIR/scripts/$(basename "$script_path")"
-    
-    echo "Preparing to run: $script_path"
-    
-    # Download the script
-    get_butterscript "$script_path"
-    local get_status=$?
-    
-    if [ $get_status -ne 0 ]; then
-        echo "ERROR: Failed to download script: $script_path"
-        return 1
-    fi
-    
-    # Check that the file exists directly
-    if [ ! -f "$script_file" ]; then
-        echo "ERROR: Script file does not exist: $script_file"
-        return 1
-    fi
-    
-    # Create a temporary directory for the script to use
-    local script_temp_dir="$MAIN_TEMP_DIR/${script_name}_workdir"
-    mkdir -p "$script_temp_dir"
-    
-    echo "Running script: $script_path"
-    echo "Script file: $script_file"
-    echo "Work directory: $script_temp_dir"
-    
-    # Run the script
-    SCRIPT_TEMP_DIR="$script_temp_dir" bash "$script_file"
-    local run_status=$?
-    
-    if [ $run_status -ne 0 ]; then
-        echo "ERROR: Script execution failed with status: $run_status"
-        return 1
-    fi
-    
-    echo "Script execution completed successfully."
-    return 0
-}
-
-# ============================================
-# Confirm User Intention
-# ============================================
+# Banner
 clear
-echo "
- +-+-+-+-+-+-+-+-+-+-+-+-+-+ 
- |j|u|s|t|a|g|u|y|l|i|n|u|x| 
- +-+-+-+-+-+-+-+-+-+-+-+-+-+ 
- |o|p|e|n|b|o|x| |s|e|t|u|p|  
- +-+-+-+-+-+-+-+-+-+-+-+-+-+                                                                             
-"
+echo -e "${CYAN}"
+echo " +-+-+-+-+-+-+-+-+-+-+-+-+-+ "
+echo " |j|u|s|t|a|g|u|y|l|i|n|u|x| "
+echo " +-+-+-+-+-+-+-+-+-+-+-+-+-+ "
+echo " |o|p|e|n|b|o|x| |s|e|t|u|p| "
+echo " +-+-+-+-+-+-+-+-+-+-+-+-+-+ "
+echo -e "${NC}\n"
 
-echo "This script will install and configure Openbox on your Debian system."
-read -p "Do you want to continue? (y/n) " confirm
-[[ ! "$confirm" =~ ^[Yy]$ ]] && die "Installation aborted."
+read -p "Install Openbox? (y/n) " -n 1 -r
+echo
+[[ ! $REPLY =~ ^[Yy]$ ]] && exit 1
 
-sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get clean
+# Update system
+if [ "$ONLY_CONFIG" = false ]; then
+    msg "Updating system..."
+    sudo apt-get update && sudo apt-get upgrade -y
+else
+    msg "Skipping system update (--only-config mode)"
+fi
 
-# ============================================
-# Initialize Installation Directory
-# ============================================
-mkdir -p "$INSTALL_DIR" || die "Failed to create installation directory."
+# Package groups for better organization
+PACKAGES_CORE=(
+    xorg xorg-dev xbacklight xbindkeys xvkbd xinput
+    build-essential openbox tint2 xdotool
+    libnotify-bin libnotify-dev
+)
 
-# ============================================
-# Install Required Packages
-# ============================================
-install_core_packages() {
-    echo "Installing core window manager packages..."
-    sudo apt-get install -y \
-        xorg \
-        xorg-dev \
-        xbacklight \
-        xbindkeys \
-        xvkbd \
-        xinput \
-        build-essential \
-        openbox \
-        tint2 \
-        xdotool \
-        libnotify-bin \
-        libnotify-dev \
-        || { echo "ERROR: Core package installation failed."; return 1; }
-}
+PACKAGES_UI=(
+    polybar rofi dunst feh lxappearance network-manager-gnome
+)
 
-install_ui_packages() {
-    echo "Installing UI components..."
-    sudo apt-get install -y \
-        polybar \
-        rofi \
-        dunst \
-        feh \
-        lxappearance \
-        network-manager-gnome \
-        || { echo "ERROR: UI package installation failed."; return 1; }
-}
+PACKAGES_FILE_MANAGER=(
+    thunar thunar-archive-plugin thunar-volman
+    gvfs-backends dialog mtools smbclient cifs-utils ripgrep fd-find unzip
+)
 
-install_file_manager_packages() {
-    echo "Installing file management packages..."
-    sudo apt-get install -y \
-        thunar \
-        thunar-archive-plugin \
-        thunar-volman \
-        gvfs-backends \
-        dialog \
-        mtools \
-        smbclient \
-        cifs-utils \
-        unzip \
-        || { echo "ERROR: File manager package installation failed."; return 1; }
-}
+PACKAGES_AUDIO=(
+    pavucontrol pulsemixer pamixer pipewire-audio
+)
 
-install_audio_packages() {
-    echo "Installing audio packages..."
-    sudo apt-get install -y \
-        pavucontrol \
-        pulsemixer \
-        pamixer \
-        pipewire-audio \
-        || { echo "ERROR: Audio package installation failed."; return 1; }
-}
+PACKAGES_UTILITIES=(
+    avahi-daemon acpi acpid xfce4-power-manager xfce4-appfinder
+    flameshot qimgv nala micro xdg-user-dirs-gtk tilix
+)
 
-install_utility_packages() {
-    echo "Installing utility packages..."
-    sudo apt-get install -y \
-        avahi-daemon \
-        acpi \
-        acpid \
-        xfce4-power-manager \
-        xfce4-appfinder \
-        flameshot \
-        qimgv \
-        firefox-esr \
-        nala \
-        micro \
-        xdg-user-dirs-gtk \
-        tilix \
-        || { echo "ERROR: Utility package installation failed."; return 1; }
-}
+PACKAGES_TERMINAL=(
+    # exa/eza handled separately due to debian/ubuntu differences
+)
 
-install_terminal_packages() {
-    echo "Installing terminal and shell utilities..."
-    sudo apt-get install -y \
-        exa \
-        || { echo "ERROR: Terminal package installation failed."; return 1; }
-}
+PACKAGES_FONTS=(
+    fonts-recommended fonts-font-awesome fonts-terminus
+)
 
-install_font_packages() {
-    echo "Installing font packages..."
-    sudo apt-get install -y \
-        fonts-recommended \
-        fonts-font-awesome \
-        fonts-terminus \
-        || { echo "ERROR: Font package installation failed."; return 1; }
-}
+PACKAGES_BUILD=(
+    cmake meson ninja-build curl pkg-config
+)
 
-install_packages() {
-    echo "Installing required packages..."
+# Install packages by group
+if [ "$ONLY_CONFIG" = false ]; then
+    msg "Installing core packages..."
+    sudo apt-get install -y "${PACKAGES_CORE[@]}" || die "Failed to install core packages"
+
+    msg "Installing UI components..."
+    sudo apt-get install -y "${PACKAGES_UI[@]}" || die "Failed to install UI packages"
+
+    msg "Installing file manager..."
+    sudo apt-get install -y "${PACKAGES_FILE_MANAGER[@]}" || die "Failed to install file manager"
+
+    msg "Installing audio support..."
+    sudo apt-get install -y "${PACKAGES_AUDIO[@]}" || die "Failed to install audio packages"
+
+    msg "Installing system utilities..."
+    sudo apt-get install -y "${PACKAGES_UTILITIES[@]}" || die "Failed to install utilities"
     
-    # Install each group, but continue if one fails
-    install_core_packages || echo "Warning: Some core packages failed to install"
-    install_ui_packages || echo "Warning: Some UI packages failed to install"
-    install_file_manager_packages || echo "Warning: Some file manager packages failed to install"
-    install_audio_packages || echo "Warning: Some audio packages failed to install"
-    install_utility_packages || echo "Warning: Some utility packages failed to install"
-    install_terminal_packages || echo "Warning: Some terminal packages failed to install"
-    install_font_packages || echo "Warning: Some font packages failed to install"
+    # Try firefox-esr first (Debian), then firefox (Ubuntu)
+    sudo apt-get install -y firefox-esr 2>/dev/null || sudo apt-get install -y firefox 2>/dev/null || msg "Note: firefox not available, skipping..."
     
-    echo "Package installation completed."
-}
+    # Try exa first (Debian 12), then eza (newer Ubuntu)
+    sudo apt-get install -y exa 2>/dev/null || sudo apt-get install -y eza 2>/dev/null || msg "Note: exa/eza not available, skipping..."
 
-install_reqs() {
-    echo "Installing required dev packages..."
-    sudo apt-get install -y cmake meson ninja-build curl pkg-config || die "Package installation failed."
-}
+    msg "Installing fonts..."
+    sudo apt-get install -y "${PACKAGES_FONTS[@]}" || die "Failed to install fonts"
 
-# ============================================
-# Enable System Services
-# ============================================
-enable_services() {
-    echo "Enabling required services..."
-    sudo systemctl enable avahi-daemon || echo "Warning: Failed to enable avahi-daemon."
-    sudo systemctl enable acpid || echo "Warning: Failed to enable acpid."
-}
+    msg "Installing build dependencies..."
+    sudo apt-get install -y "${PACKAGES_BUILD[@]}" || die "Failed to install build tools"
 
-# ============================================
-# Set Up User Directories
-# ============================================
-setup_user_dirs() {
-    echo "Updating user directories..."
-    xdg-user-dirs-update || echo "Warning: Failed to update user directories."
-    mkdir -p ~/Screenshots/ || echo "Warning: Failed to create Screenshots directory."
-    echo "User directories updated."
-}
+    # Install obmenu-generator dependencies
+    msg "Installing obmenu-generator dependencies..."
+    sudo apt-get install -y libgtk3-perl libmodule-build-perl
 
-# ============================================
-# Check for Existing Openbox Config
-# ============================================
-check_openbox() {
-    if [ -d "$CONFIG_DIR" ]; then
-        echo "An existing ~/.config/openbox directory was found."
-        read -p "Would you like to back it up before proceeding? (y/n) " response
-        if [[ "$response" =~ ^[Yy]$ ]]; then
-            timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
-            backup_dir="$HOME/.config/openbox_backup_$timestamp"
-            mv "$CONFIG_DIR" "$backup_dir"
-            echo "Backup created at $backup_dir"
-        else
-            echo "Skipping backup. Your existing config will be overwritten."
-        fi
+    # Enable services
+    sudo systemctl enable avahi-daemon acpid
+else
+    msg "Skipping package installation (--only-config mode)"
+fi
+
+# Setup directories
+xdg-user-dirs-update
+mkdir -p ~/Screenshots
+
+# Handle existing config
+if [ -d "$CONFIG_DIR" ]; then
+    clear
+    read -p "Found existing openbox config. Backup? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        mv "$CONFIG_DIR" "$CONFIG_DIR.bak.$(date +%s)"
+        msg "Backed up existing config"
+    else
+        clear
+        read -p "Overwrite without backup? (y/n) " -n 1 -r
+        echo
+        [[ $REPLY =~ ^[Yy]$ ]] || die "Installation cancelled"
+        rm -rf "$CONFIG_DIR"
     fi
-}
+fi
 
-# ============================================
-# Move Config Files to ~/.config/openbox
-# ============================================
-setup_openbox_config() {
-    echo "Moving Openbox configuration files..."
-    mkdir -p "$CONFIG_DIR"
-    cp -a "$CLONED_DIR/config/." "$CONFIG_DIR/" || echo "Warning: Failed to copy Openbox config contents."
-    echo "Openbox configuration files copied successfully."
-}
+# Copy configs
+msg "Setting up configuration..."
+mkdir -p "$CONFIG_DIR"
 
-# ============================================
-# Install ft-picom
-# ============================================
-install_ftlabs_picom() {
-    echo "Installing picom..."
-    run_butterscript "setup/install_picom.sh"
-}
+# Copy openbox configuration files from config directory
+if [ -d "$SCRIPT_DIR/config" ]; then
+    cp -a "$SCRIPT_DIR/config/." "$CONFIG_DIR/" || die "Failed to copy openbox configuration"
+else
+    die "config directory not found"
+fi
 
-# ============================================
-# Install Wezterm
-# ============================================
-install_wezterm() {
-    echo "Installing Wezterm..."
-    run_butterscript "wezterm/install_wezterm.sh"
-}
+# Install custom Openbox theme
+if [ "$ONLY_CONFIG" = false ]; then
+    msg "Installing custom Openbox theme..."
+    mkdir -p ~/.themes
+    if [ -d "$SCRIPT_DIR/config/themes/Simply_Circles_Dark" ]; then
+        cp -r "$SCRIPT_DIR/config/themes/Simply_Circles_Dark" ~/.themes/
+    fi
+fi
 
-# ============================================
-# Install Fonts
-# ============================================
-install_fonts() {
-    echo "Installing fonts..."
-    run_butterscript "theming/install_nerdfonts.sh"
-}
+# Install obmenu-generator (only if not --only-config)
+if [ "$ONLY_CONFIG" = false ]; then
+    msg "Installing obmenu-generator..."
+    mkdir -p "$TEMP_DIR"
+    cd "$TEMP_DIR"
 
-# ============================================
-# Install GTK Theme & Icons
-# ============================================
-install_theming() {
-    echo "Installing GTK themes and icons..."
-    run_butterscript "theming/install_theme.sh"
-}
-
-# ============================================
-# Install Obmenu Generator
-# ============================================
-install_obmenu_generator() {
-    echo "Installing obmenu-generator dependencies..."
-    sudo apt install -y libgtk3-perl libmodule-build-perl
-
-    echo "Installing Linux-DesktopFiles..."
-    git clone https://github.com/trizen/Linux-DesktopFiles.git "$INSTALL_DIR/Linux-DesktopFiles"
-    cd "$INSTALL_DIR/Linux-DesktopFiles"
+    # Install Linux-DesktopFiles
+    git clone https://github.com/trizen/Linux-DesktopFiles.git
+    cd Linux-DesktopFiles
     perl Build.PL
     ./Build
     ./Build test
     sudo ./Build install
+    cd "$TEMP_DIR"
 
-    echo "Setting up obmenu-generator..."
+    # Setup obmenu-generator
     mkdir -p ~/.local/bin/
     mkdir -p ~/.config/obmenu-generator
 
-    git clone https://github.com/trizen/obmenu-generator.git "$INSTALL_DIR/obmenu-generator"
-    cp "$INSTALL_DIR/obmenu-generator/obmenu-generator" ~/.local/bin/
+    git clone https://github.com/trizen/obmenu-generator.git
+    cp obmenu-generator/obmenu-generator ~/.local/bin/
 
-    # Use schema.pl from your repo
-    cp "$CLONED_DIR/config/obmenu/schema.pl" ~/.config/obmenu-generator/
+    # Use schema.pl from config if it exists
+    if [ -f "$CONFIG_DIR/obmenu/schema.pl" ]; then
+        cp "$CONFIG_DIR/obmenu/schema.pl" ~/.config/obmenu-generator/
+    fi
 
-    echo "Generating Openbox menu..."
+    # Generate Openbox menu
+    export PATH="$HOME/.local/bin:$PATH"
     obmenu-generator -p -i
-}
+fi
 
-# ============================================
-# Install Openbox Theme
-# ============================================
-install_openbox_theme() {
-    echo "Installing custom Openbox theme..."
-    mkdir -p ~/.themes
-    cp -r "$CLONED_DIR/config/themes/Simply_Circles_Dark" ~/.themes/
-}
-
-# ============================================
 # Create LXAppearance Launcher
-# ============================================
-install_lxappearance_launcher() {
-    echo "[*] Creating lxappearance desktop launcher..."
-
+if [ "$ONLY_CONFIG" = false ]; then
+    msg "Creating lxappearance desktop launcher..."
+    
     local desktop_file="$HOME/.local/share/applications/lxappearance.desktop"
-
     mkdir -p "$(dirname "$desktop_file")"
-
+    
     cat > "$desktop_file" <<EOF
 [Desktop Entry]
 Name=Appearance
@@ -396,57 +319,76 @@ Terminal=false
 Type=Application
 Categories=Settings;GTK;X-XFCE;
 EOF
-
+    
     chmod +x "$desktop_file"
+fi
 
-    echo "[✓] lxappearance launcher created at $desktop_file"
+# Butterscript helper
+get_script() {
+    wget -qO- "https://raw.githubusercontent.com/drewgrif/butterscripts/main/$1" | bash
 }
 
-# ============================================
-# Install Login Manager
-# ============================================
-install_displaymanager() {
-    echo "Installing display manager..."
-    run_butterscript "system/install_lightdm.sh"
-}
+# Install essential components
+if [ "$ONLY_CONFIG" = false ]; then
+    mkdir -p "$TEMP_DIR" && cd "$TEMP_DIR"
 
-# ============================================
-# Replace .bashrc
-# ============================================
-replace_bashrc() {
-    run_butterscript "system/add_bashrc.sh"
-}
+    msg "Installing picom..."
+    get_script "setup/install_picom.sh"
 
-# ============================================
-# Install Optional Tools
-# ============================================
-install_optionals() {
-    echo "Installing optional tools..."
-    run_butterscript "setup/optional_tools.sh"
-}
+    msg "Installing wezterm..."
+    get_script "wezterm/install_wezterm.sh"
 
-# ============================================
-# Main Script Execution
-# ============================================
-echo "Starting Openbox setup..."
+    msg "Installing fonts..."
+    get_script "theming/install_nerdfonts.sh"
 
-install_packages
-install_reqs
-enable_services
-setup_user_dirs
-check_openbox
-setup_openbox_config
-install_ftlabs_picom
-install_wezterm
-install_fonts
-install_theming
-install_obmenu_generator
-install_openbox_theme
-install_lxappearance_launcher
-install_displaymanager
-replace_bashrc
-install_optionals
+    msg "Installing themes..."
+    get_script "theming/install_theme.sh"
 
-echo "All installations completed successfully!"
-echo "Installation log saved to: $LOG_FILE"
-echo "Please log out and select Openbox from your display manager to start using your new desktop environment."
+    msg "Downloading wallpaper directory..."
+    cd "$CONFIG_DIR"
+    git clone --depth 1 --filter=blob:none --sparse https://github.com/drewgrif/butterscripts.git "$TEMP_DIR/butterscripts-wallpaper" || die "Failed to clone butterscripts"
+    cd "$TEMP_DIR/butterscripts-wallpaper"
+    git sparse-checkout set wallpaper || die "Failed to set sparse-checkout"
+    cp -r wallpaper "$CONFIG_DIR/" || die "Failed to copy wallpaper directory"
+
+    msg "Downloading display manager installer..."
+    wget -O "$TEMP_DIR/install_lightdm.sh" "https://raw.githubusercontent.com/drewgrif/butterscripts/main/system/install_lightdm.sh"
+    chmod +x "$TEMP_DIR/install_lightdm.sh"
+    msg "Running display manager installer..."
+    # Run in current terminal session to preserve interactivity
+    bash "$TEMP_DIR/install_lightdm.sh"
+
+    # Bashrc configuration
+    clear
+    read -p "Replace your .bashrc with justaguylinux .bashrc? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        msg "Configuring bashrc..."
+        get_script "system/add_bashrc.sh"
+    fi
+
+    # Optional tools
+    clear
+    read -p "Install optional tools (browsers, editors, etc)? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        msg "Downloading optional tools installer..."
+        wget -O "$TEMP_DIR/optional_tools.sh" "https://raw.githubusercontent.com/drewgrif/butterscripts/main/setup/optional_tools.sh"
+        chmod +x "$TEMP_DIR/optional_tools.sh"
+        msg "Running optional tools installer..."
+        # Run in current terminal session to preserve interactivity
+        if bash "$TEMP_DIR/optional_tools.sh"; then
+            msg "Optional tools completed successfully"
+        else
+            msg "Optional tools exited (this is normal if cancelled by user)"
+        fi
+    fi
+else
+    msg "Skipping external tool installation (--only-config mode)"
+fi
+
+# Done
+echo -e "\n${GREEN}Installation complete!${NC}"
+echo "1. Log out and select 'Openbox' from your display manager"
+echo "2. Right-click on desktop to access menu"
+echo "3. Use Super+Space for rofi launcher"
