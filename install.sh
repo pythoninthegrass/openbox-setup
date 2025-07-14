@@ -175,7 +175,7 @@ PACKAGES_AUDIO=(
 
 PACKAGES_UTILITIES=(
     avahi-daemon acpi acpid xfce4-power-manager xfce4-appfinder
-    flameshot qimgv nala micro xdg-user-dirs-gtk tilix
+    flameshot qimgv nala micro xdg-user-dirs-gtk
 )
 
 PACKAGES_TERMINAL=(
