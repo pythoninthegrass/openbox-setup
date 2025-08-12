@@ -221,7 +221,8 @@ if [ "$ONLY_CONFIG" = false ]; then
 
     # Install obmenu-generator dependencies
     msg "Installing obmenu-generator dependencies..."
-    sudo apt-get install -y libgtk3-perl libmodule-build-perl
+    sudo apt-get install -y libgtk3-perl libmodule-build-perl libdata-dump-perl \
+        libfile-desktopentry-perl cpanminus make
 
     # Enable services
     sudo systemctl enable avahi-daemon acpid
@@ -277,12 +278,12 @@ if [ "$ONLY_CONFIG" = false ]; then
     cd "$TEMP_DIR"
 
     # Install Linux-DesktopFiles
-    git clone https://github.com/trizen/Linux-DesktopFiles.git
+    git clone https://github.com/trizen/Linux-DesktopFiles.git || die "Failed to clone Linux-DesktopFiles"
     cd Linux-DesktopFiles
-    perl Build.PL
-    ./Build
-    ./Build test
-    sudo ./Build install
+    perl Build.PL || die "Failed to configure Linux-DesktopFiles"
+    ./Build || die "Failed to build Linux-DesktopFiles"
+    ./Build test || msg "Warning: Tests failed but continuing..."
+    sudo ./Build install || die "Failed to install Linux-DesktopFiles"
     cd "$TEMP_DIR"
 
     # Setup obmenu-generator
@@ -299,7 +300,12 @@ if [ "$ONLY_CONFIG" = false ]; then
 
     # Generate Openbox menu
     export PATH="$HOME/.local/bin:$PATH"
-    obmenu-generator -p -i
+    # Check if running in X session before generating menu
+    if [ -n "$DISPLAY" ]; then
+        obmenu-generator -p -i || msg "Warning: Menu generation failed, will retry on first login"
+    else
+        msg "No X display found, skipping menu generation (will auto-generate on first login)"
+    fi
 fi
 
 # Create LXAppearance Launcher
