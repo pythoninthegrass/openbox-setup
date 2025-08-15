@@ -258,6 +258,12 @@ mkdir -p "$CONFIG_DIR"
 # Copy openbox configuration files from config directory
 if [ -d "$SCRIPT_DIR/config" ]; then
     cp -a "$SCRIPT_DIR/config/." "$CONFIG_DIR/" || die "Failed to copy openbox configuration"
+    
+    # Replace placeholder in menu.xml with actual home directory
+    if [ -f "$CONFIG_DIR/menu.xml" ]; then
+        sed -i "s|USER_HOME_DIR|$HOME|g" "$CONFIG_DIR/menu.xml"
+        msg "Updated menu.xml with user-specific paths"
+    fi
 else
     die "config directory not found"
 fi
