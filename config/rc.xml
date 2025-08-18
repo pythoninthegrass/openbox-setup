@@ -715,17 +715,17 @@
     </keybind>
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">
-        <command>pulsevol --up</command>
+        <command>~/.config/openbox/scripts/changevolume up</command>
       </action>
     </keybind>
     <keybind key="XF86AudioLowerVolume">
       <action name="Execute">
-        <command>pulsevol --down</command>
+        <command>~/.config/openbox/scripts/changevolume down</command>
       </action>
     </keybind>
     <keybind key="XF86AudioMute">
       <action name="Execute">
-        <command>pulsevol --mute</command>
+        <command>~/.config/openbox/scripts/changevolume mute</command>
       </action>
     </keybind>
     <!-- Screenshot Keybindings -->
