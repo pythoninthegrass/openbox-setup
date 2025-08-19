@@ -770,21 +770,6 @@
         <command>xbacklight -inc 5</command>
       </action>
     </keybind>
-    <keybind key="XF86AudioRaiseVolume">
-      <action name="Execute">
-        <command>pulsevol --up</command>
-      </action>
-    </keybind>
-    <keybind key="XF86AudioLowerVolume">
-      <action name="Execute">
-        <command>pulsevol --down</command>
-      </action>
-    </keybind>
-    <keybind key="XF86AudioMute">
-      <action name="Execute">
-        <command>pulsevol --mute</command>
-      </action>
-    </keybind>
     <!-- Session Controls (Restart, Exit...) -->
     <keybind key="W-S-r">
       <action name="Restart"/>
