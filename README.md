@@ -125,6 +125,12 @@ Keybindings are defined in:
 
 ---
 
+## ☕ Support
+
+If this setup has been helpful, consider buying me a coffee:
+
+<a href="https://www.buymeacoffee.com/justaguylinux" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy me a coffee" /></a>
+
 ## 📺 Watch on YouTube
 
 Want to see it in action?  
