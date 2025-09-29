@@ -1,10 +1,24 @@
 # 🪟 openbox-setup
+
+> **🚨 REPOSITORY MIGRATION NOTICE**
+>
+> This repository has moved to **[Codeberg](https://codeberg.org/justaguylinux/openbox-setup)**
+>
+> - **Primary repository**: https://codeberg.org/justaguylinux/openbox-setup
+> - **This GitHub repository**: Mirror only (read-only)
+> - **Migration deadline**: December 15, 2025 - GitHub mirror will be archived
+>
+> Please update your bookmarks and git remotes:
+> ```bash
+> git remote set-url origin https://codeberg.org/justaguylinux/openbox-setup.git
+> ```
+
 ![Made for Debian](https://img.shields.io/badge/Made%20for-Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white)
 
-A complete Openbox configuration script for Debian-based systems.  
+A complete Openbox configuration script for Debian-based systems.
 Includes a polished theme, smart automation, dynamic menus, and sane keybindings — fully set up in minutes.
 
-> Part of the [JustAGuy Linux](https://github.com/drewgrif) window manager collection.
+> Part of the [JustAGuy Linux](https://codeberg.org/justaguylinux) window manager collection.
 
 ![2025-03-27_14-36_3](https://github.com/user-attachments/assets/7c5a4f82-3ec8-48e2-aab6-924d5f41b261)
 
@@ -13,7 +27,7 @@ Includes a polished theme, smart automation, dynamic menus, and sane keybindings
 ## 🚀 Installation
 
 ```bash
-git clone https://github.com/drewgrif/openbox-setup.git
+git clone https://codeberg.org/justaguylinux/openbox-setup.git
 cd openbox-setup
 chmod +x install.sh
 ./install.sh
@@ -121,7 +135,6 @@ Keybindings are defined in:
 - Menu is dynamically generated via `obmenu-generator -p -i`
 - Wallpapers are stored in `~/.config/openbox/wallpaper/`
 - You can launch a keybind viewer anytime with `Super + H`
-- Optional `.bashrc` enhancements available from [`jag_dots`](https://github.com/drewgrif/jag_dots)
 
 ---
 
